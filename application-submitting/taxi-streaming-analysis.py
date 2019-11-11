@@ -14,6 +14,9 @@ parser.add_argument('-f', '--faresport', type=int, default=11111,
                     help='The port on which the fares dataset is streamed')
 parser.add_argument('-r', '--ridesport', type=int, default=11112,
                     help='The port on which the rides dataset is streamed')
+parser.add_argument('-c', '--checkpoint', type=str, help='The HDFS path '
+                    'where Spark will write checkpointing infomation. '
+                    'Default = OUTPUTPATH/checkpoint')
 
 args = parser.parse_args()
 
@@ -51,4 +54,6 @@ fares_count_query = fares_count \
     .outputMode('append') \
     .format('csv') \
     .option('path', args.outputpath) \
+    .option('checkpointLocation', args.checkpoint if args.checkpoint
+            else args.outputpath + '/checkpoint') \
     .start()
