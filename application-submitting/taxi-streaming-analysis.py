@@ -8,12 +8,12 @@ parser = argparse.ArgumentParser(
 parser.add_argument('appname', type=str, help='The Spark application name')
 parser.add_argument('sockethostname', type=str,
                     help='The hostname on which to listen to the socket')
-parser.add_argument('faresport', type=int,
-                    help='The port on which the fares dataset is streamed')
-parser.add_argument('ridesport', type=int,
-                    help='The port on which the rides dataset is streamed')
-parser.add_argument('outputpath', type=int,
+parser.add_argument('outputpath', type=str,
                     help='The HDFS path where to write the CSV output')
+parser.add_argument('-f', '--faresport', type=int, default=11111,
+                    help='The port on which the fares dataset is streamed')
+parser.add_argument('-r', '--ridesport', type=int, default=11112,
+                    help='The port on which the rides dataset is streamed')
 
 args = parser.parse_args()
 
