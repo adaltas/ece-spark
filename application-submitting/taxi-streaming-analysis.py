@@ -1,4 +1,5 @@
 import argparse
+import getpass
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split, window, sum, mean
@@ -16,7 +17,7 @@ parser.add_argument('-r', '--ridesport', type=int, default=11112,
                     help='The port on which the rides dataset is streamed')
 parser.add_argument('-c', '--checkpoint', type=str, help='The HDFS path '
                     'where Spark will write checkpointing infomation. '
-                    'Default = OUTPUTPATH/checkpoint')
+                    'Default = /user/USERNAME/checkpoint')
 
 args = parser.parse_args()
 
@@ -60,7 +61,7 @@ fares_count_query = fares_count \
     .format('parquet') \
     .option('path', args.outputpath) \
     .option('checkpointLocation', args.checkpoint if args.checkpoint
-            else args.outputpath + '/checkpoint') \
+            else '/user/%s/checkpoint' % getpass.getuser()) \
     .start()
 
 fares_count_query.awaitTermination()
