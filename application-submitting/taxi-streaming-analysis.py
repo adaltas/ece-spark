@@ -48,7 +48,7 @@ fares_count = fares \
 
 fares_count_query = fares_count \
     .writeStream \
-    .outputMode('complete') \
+    .outputMode('append') \
     .format('csv') \
     .option('path', args.outputpath) \
     .start()
