@@ -59,3 +59,5 @@ fares_count_query = fares_count \
     .option('checkpointLocation', args.checkpoint if args.checkpoint
             else args.outputpath + '/checkpoint') \
     .start()
+
+fares_count_query.awaitTermination()
