@@ -54,7 +54,7 @@ fares_count = fares \
 fares_count_query = fares_count \
     .writeStream \
     .outputMode('append') \
-    .format('orc') \
+    .format('parquet') \
     .option('path', args.outputpath) \
     .option('checkpointLocation', args.checkpoint if args.checkpoint
             else args.outputpath + '/checkpoint') \
