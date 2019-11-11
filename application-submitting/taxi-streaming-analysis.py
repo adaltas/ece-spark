@@ -1,7 +1,7 @@
 import argparse
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, split, window
+from pyspark.sql.functions import explode, split, window, sum, mean
 
 parser = argparse.ArgumentParser(
     description='Process NYC Taxi datasets in streaming using sockets')
@@ -49,7 +49,10 @@ fares = fares_raw \
 fares_count = fares \
     .withWatermark('start_time', '5 minutes') \
     .groupBy(window(fares.start_time, '2 minutes', '2 minutes')) \
-    .agg({'ride_id': 'count', 'total_fare': 'mean'})
+    .agg(
+        sum('ride_id').alias('ride_count'),
+        mean('total_fare').alias('mean_total_fare')
+    )
 
 fares_count_query = fares_count \
     .writeStream \
