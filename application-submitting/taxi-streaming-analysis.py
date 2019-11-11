@@ -33,16 +33,18 @@ fares_raw = spark \
     .load()
 
 # Parse the socket message "manually"
-fares = fares_raw.select(
-    split(fares_raw.value, ',')[0].alias('ride_id').cast('int'),
-    split(fares_raw.value, ',')[1].alias('taxi_id').cast('int'),
-    split(fares_raw.value, ',')[2].alias('driver_id').cast('int'),
-    split(fares_raw.value, ',')[3].alias('start_time').cast('timestamp'),
-    split(fares_raw.value, ',')[4].alias('payment_type'),
-    split(fares_raw.value, ',')[5].alias('tip').cast('float'),
-    split(fares_raw.value, ',')[6].alias('tolls').cast('float'),
-    split(fares_raw.value, ',')[7].alias('total_fare').cast('float')
-)
+fares = fares_raw \
+    .select(
+        split(fares_raw.value, ',')[0].alias('ride_id').cast('int'),
+        split(fares_raw.value, ',')[1].alias('taxi_id').cast('int'),
+        split(fares_raw.value, ',')[2].alias('driver_id').cast('int'),
+        split(fares_raw.value, ',')[3].alias('start_time').cast('timestamp'),
+        split(fares_raw.value, ',')[4].alias('payment_type'),
+        split(fares_raw.value, ',')[5].alias('tip').cast('float'),
+        split(fares_raw.value, ',')[6].alias('tolls').cast('float'),
+        split(fares_raw.value, ',')[7].alias('total_fare').cast('float')
+    ) \
+    .withWatermark('start_time', '5 minutes') \
 
 fares_count = fares \
     .withWatermark('start_time', '5 minutes') \
