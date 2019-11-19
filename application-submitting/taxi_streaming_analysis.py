@@ -17,7 +17,7 @@ parser.add_argument('-r', '--ridesport', type=int, default=11112,
                     help='The port on which the rides dataset is streamed')
 parser.add_argument('-c', '--checkpoint', type=str, help='The HDFS path '
                     'where Spark will write checkpointing infomation. '
-                    'Default = /user/USERNAME/checkpoint')
+                    'Default = /user/USERNAME/checkpoint/APP_NAME')
 
 args = parser.parse_args()
 
@@ -25,6 +25,8 @@ spark = SparkSession \
     .builder \
     .appName(args.appname) \
     .getOrCreate()
+
+print('Application Web UI: %s' % spark.sparkContext.uiWebUrl)
 
 fares_raw = spark \
     .readStream \
@@ -61,7 +63,8 @@ fares_count_query = fares_count \
     .format('parquet') \
     .option('path', args.outputpath) \
     .option('checkpointLocation', args.checkpoint if args.checkpoint
-            else '/user/%s/checkpoint' % getpass.getuser()) \
+            else '/user/{}/checkpoint/{}'.format(
+                getpass.getuser(), args.appname)) \
     .start()
 
 fares_count_query.awaitTermination()
