@@ -2,7 +2,7 @@ import argparse
 import getpass
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, split, window, sum, mean
+from pyspark.sql.functions import explode, split, window, count, mean
 
 parser = argparse.ArgumentParser(
     description='Process NYC Taxi datasets in streaming using sockets')
@@ -47,13 +47,13 @@ fares = fares_raw \
         split(fares_raw.value, ',')[6].alias('tolls').cast('float'),
         split(fares_raw.value, ',')[7].alias('total_fare').cast('float')
     ) \
-    .withWatermark('start_time', '5 minutes') \
+    .withWatermark('start_time', '1 minutes') \
 
 fares_count = fares \
-    .withWatermark('start_time', '5 minutes') \
-    .groupBy(window(fares.start_time, '2 minutes', '2 minutes')) \
+    .withWatermark('start_time', '1 minutes') \
+    .groupBy(window(fares.start_time, '1 minutes', '1 minutes')) \
     .agg(
-        sum('ride_id').alias('ride_count'),
+        count('ride_id').alias('ride_count'),
         mean('total_fare').alias('mean_total_fare')
     )
 
@@ -61,6 +61,7 @@ fares_count_query = fares_count \
     .writeStream \
     .outputMode('append') \
     .format('parquet') \
+    .trigger(processingTime='10 seconds') \
     .option('path', args.outputpath) \
     .option('checkpointLocation', args.checkpoint if args.checkpoint
             else '/user/{}/checkpoint/{}'.format(
