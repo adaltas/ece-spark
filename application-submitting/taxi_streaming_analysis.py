@@ -4,6 +4,7 @@ import getpass
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split, window, count, mean
 
+# Use Python argparse library to parse arguments
 parser = argparse.ArgumentParser(
     description='Process NYC Taxi datasets in streaming using sockets')
 parser.add_argument('appname', type=str, help='The Spark application name')
@@ -21,13 +22,16 @@ parser.add_argument('-c', '--checkpoint', type=str, help='The HDFS path '
 
 args = parser.parse_args()
 
+# Create a new SparkSession
 spark = SparkSession \
     .builder \
     .appName(args.appname) \
     .getOrCreate()
 
+# Print the application Web UI url
 print('Application Web UI: %s' % spark.sparkContext.uiWebUrl)
 
+# Define the stream source (socket)
 fares_raw = spark \
     .readStream \
     .format("socket") \
@@ -49,6 +53,7 @@ fares = fares_raw \
     ) \
     .withWatermark('start_time', '1 minutes') \
 
+# Define the aggregation to perform on the stream
 fares_count = fares \
     .withWatermark('start_time', '1 minutes') \
     .groupBy(window(fares.start_time, '1 minutes', '1 minutes')) \
@@ -57,6 +62,8 @@ fares_count = fares \
         mean('total_fare').alias('mean_total_fare')
     )
 
+# Define the stream sick (parquet files written to HDFS)
+# The trigger control the occurance of parquet file generation
 fares_count_query = fares_count \
     .writeStream \
     .outputMode('append') \
@@ -68,4 +75,5 @@ fares_count_query = fares_count \
                 getpass.getuser(), args.appname)) \
     .start()
 
+# Wait for the end of the query before ending the application
 fares_count_query.awaitTermination()
