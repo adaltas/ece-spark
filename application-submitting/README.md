@@ -7,7 +7,9 @@ The goals of this labs are to:
 
 ## Lab resources
 
-- The `taxi_streaming_analysis.py` pyspark script read streaming data from a socket and output aggregated results in parquet format to a HDFS directory.
+- The `taxi_streaming_analysis.py` pyspark script read streaming data from a socket and output aggregated results in parquet format to a HDFS directory
+- The `app.properties` file define Spark application properties
+- The `yarn_kill_application.sh` can be used to easily kill a YARN application using a keyword and a username
 
 ## Submitting the application
 
