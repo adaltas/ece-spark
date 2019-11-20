@@ -9,7 +9,13 @@ The goals of this labs are to:
 
 - The `taxi_streaming_analysis.py` pyspark script read streaming data from a socket and output aggregated results in parquet format to a HDFS directory
 - The `app.properties` file define Spark application properties
-- The `yarn_kill_application.sh` can be used to easily kill a YARN application using a keyword and a username
+- The `yarn_kill_app.sh` can be used to easily kill a YARN application using a keyword and a username
+
+## Useful links
+
+- [Spark - Submitting Applications doc](https://spark.apache.org/docs/2.3.2/submitting-applications.html)
+- [Spark - Configuration doc](https://spark.apache.org/docs/2.3.2/configuration.html)
+- [Spark - Structured Streaming doc](http://spark.apache.org/docs/2.3.2/structured-streaming-programming-guide.html)
 
 ## Submitting the application
 
