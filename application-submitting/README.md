@@ -45,3 +45,4 @@ The goals of this labs are to:
 4. Add custom application properties to the `spark-submit`
 5. Write those properties in a `.properties` file
 6. (Bonus) Write a bash script to automate the app submitting + directories cleaning in HDFS
+7. (Bonus) Write a bash script to automate the application killing
