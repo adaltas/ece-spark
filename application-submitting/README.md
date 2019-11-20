@@ -41,7 +41,7 @@ The goals of this labs are to:
 
 1. Modify the `spark_taxi_streaming.py` file with your code from lab 3
 2. Submit the application using `spark-submit`
-3. Observe the results using Zeppelin
+3. Observe the results using Zeppelin (see `ece-2019/spark/ref/lab4` notebook)
 4. Add custom application properties to the `spark-submit`
 5. Write those properties in a `.properties` file
-6. (Bonus) Write a bash script to automate the app submitting
+6. (Bonus) Write a bash script to automate the app submitting + directories cleaning in HDFS
